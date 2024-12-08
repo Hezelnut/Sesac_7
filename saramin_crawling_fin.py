@@ -9,10 +9,10 @@ from langchain.document_loaders import WebBaseLoader
 
 
 path_all = list()
-# random_num = random.randrange(1,3100)
+random_num = random.randrange(1,3100)
 # test_link = 'https://www.saramin.co.kr/zf_user/interview-review?my=0&page=1&csn=&group_cd=&orderby=registration&career_cd=&job_category=&company_nm=+'
-# for i in range(random_num,random_num+5):
-for i in range(1,3154):
+for i in range(random_num,random_num+5):
+# for i in range(1,3154):
     path = f'https://www.saramin.co.kr/zf_user/interview-review?my=0&page={i}'
     path_all.append(path)
 
@@ -122,10 +122,10 @@ for c in range(0,len(company_idx_list)-1):
         ctg_question = search_where[ctg_question+1:]
 
     ctg_ctg = ''.join(ctg_ctg)
-    ctg_type = ''.join(ctg_type)
-    ctg_num = ''.join(ctg_num)
-    ctg_how = ''.join(ctg_how)
-    ctg_question = ''.join(ctg_question)
+    ctg_type = ' '.join(ctg_type)
+    ctg_num = ' '.join(ctg_num)
+    ctg_how = ' '.join(ctg_how)
+    ctg_question = ' '.join(ctg_question)
     if ctg_ctg not in company_json[company_name_strip]['job_category']:
         company_json[company_name_strip]['job_category'].append(ctg_ctg)
     if ctg_type not in company_json[company_name_strip]['interview_type']:
