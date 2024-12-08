@@ -9,10 +9,10 @@ from langchain.document_loaders import WebBaseLoader
 
 
 path_all = list()
-random_num = random.randrange(1,3100)
+# random_num = random.randrange(1,3100)
 # test_link = 'https://www.saramin.co.kr/zf_user/interview-review?my=0&page=1&csn=&group_cd=&orderby=registration&career_cd=&job_category=&company_nm=+'
-for i in range(random_num,random_num+5):
-# for i in range(1,3154):
+# for i in range(random_num,random_num+5):
+for i in range(1,3154):
     path = f'https://www.saramin.co.kr/zf_user/interview-review?my=0&page={i}'
     path_all.append(path)
 
@@ -35,13 +35,13 @@ db = ''
 
 for u in range(0,len(s)):
     ct = s[u].page_content.strip()
-    db = db + ''.join(ct)
+    db = db + ''.join(ct) + '\n'
 
 process_words = db.replace('대기중','불합격').replace('\n면접 질문\n','ctg면접질문\n').replace('\n전형 및 면접 진행 방식\n','ctg진행방식\n').replace('\n면접 유형\n','ctg면접유형\n').replace('\n면접 인원\n','ctg면접인원\n').replace('\nTIP 및 특이사항\n','ctg특이사항\n') ## 이후 필요한 항목들 'ctg이름'으로 분류하기.
 process_words = re.sub('\w*합격\n+\d+.\d+.\d+','\nctg회사이름',process_words)
 process_words = re.sub('\d\d\d\d년\s\w반기','\nctg직업종류',process_words)
 process_words = re.sub('\n+','\\\\n',process_words)
-process_words = re.sub('\s\s+','',process_words)
+process_words = re.sub('\s\s+','\n',process_words)
 process_words = re.sub('\s+',' ',process_words)
 words = re.split('\\\\n', process_words)
 
@@ -78,6 +78,7 @@ for c in company_name:
     comp_idx = np.where(np_word==c)
     comp_idx = list(comp_idx[0])
     comp_idx = [int(i) for i in comp_idx]
+    c = c.strip()
     company_unit = dict_format(c)
     company_unit['idx'].extend(comp_idx)
     company_json[c]=company_unit
@@ -90,6 +91,7 @@ for c in company_name:
 company_idx_list.append(len(words))
 for c in range(0,len(company_idx_list)-1):
     company_text = words[company_idx_list[c]:company_idx_list[c+1]]
+    company_name_strip = company_text[0].strip()
     search_where = np.array(company_text)
     # 직무 : ctg직업종류-1
     ctg_1 = np.where(search_where=='ctg직업종류')
@@ -124,16 +126,16 @@ for c in range(0,len(company_idx_list)-1):
     ctg_num = ''.join(ctg_num)
     ctg_how = ''.join(ctg_how)
     ctg_question = ''.join(ctg_question)
-    if ctg_ctg not in company_json[company_text[0]]['job_category']:
-        company_json[company_text[0]]['job_category'].append(ctg_ctg)
-    if ctg_type not in company_json[company_text[0]]['interview_type']:
-        company_json[company_text[0]]['interview_type'].append(ctg_type)
-    if ctg_num not in company_json[company_text[0]]['interview_num']:
-        company_json[company_text[0]]['interview_num'].append(ctg_num)
-    if ctg_how not in company_json[company_text[0]]['interview_how']:
-        company_json[company_text[0]]['interview_how'].append(ctg_how)
-    if ctg_question not in company_json[company_text[0]]['interview_questions']:
-        company_json[company_text[0]]['interview_questions'].append(ctg_question)
+    if ctg_ctg not in company_json[company_name_strip]['job_category']:
+        company_json[company_name_strip]['job_category'].append(ctg_ctg)
+    if ctg_type not in company_json[company_name_strip]['interview_type']:
+        company_json[company_name_strip]['interview_type'].append(ctg_type)
+    if ctg_num not in company_json[company_name_strip]['interview_num']:
+        company_json[company_name_strip]['interview_num'].append(ctg_num)
+    if ctg_how not in company_json[company_name_strip]['interview_how']:
+        company_json[company_name_strip]['interview_how'].append(ctg_how)
+    if ctg_question not in company_json[company_name_strip]['interview_questions']:
+        company_json[company_name_strip]['interview_questions'].append(ctg_question)
 
 
 
