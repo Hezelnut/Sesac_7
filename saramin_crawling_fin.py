@@ -9,10 +9,10 @@ from langchain.document_loaders import WebBaseLoader
 
 
 path_all = list()
-random_num = random.randrange(1,3100)
+# random_num = random.randrange(1,3100)
 # test_link = 'https://www.saramin.co.kr/zf_user/interview-review?my=0&page=1&csn=&group_cd=&orderby=registration&career_cd=&job_category=&company_nm=+'
-for i in range(random_num,random_num+5):
-# for i in range(1,3154):
+# for i in range(random_num,random_num+5):
+for i in range(1,3154):
     path = f'https://www.saramin.co.kr/zf_user/interview-review?my=0&page={i}'
     path_all.append(path)
 
